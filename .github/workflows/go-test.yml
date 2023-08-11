@@ -7,36 +7,18 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        go_version:  ["1.21.x"]
+  setup:
+    if: github.event_name == 'pull_request' || !(github.event_name == 'push' && github.ref == 'refs/heads/main')
+    outputs:
+      branch: ${{ steps.set_branch_variable.outputs.branch }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - id: set_branch_variable
+        name: Set Branch Variable
+        uses: emmahsax/github-actions/set-branch-variable@main
 
-    - name: Set up Go
-      uses: emmahsax/github-actions/setup-go@main
-      with:
-        github_token: ${{ secrets.github_token }}
-        go_version: ${{ matrix.go_versionv }}
-
-    - name: Build
-      run: go build -v ./...
-
-    - name: Test
-      run: go test -v ./...
-
-    - name: Vet
-      run: go vet ./...
-
-    - uses: Jerome1337/gofmt-action@v1.0.5
-      with:
-        gofmt-path: ./
-        gofmt-flags: '-l -d'
-
-    - uses: dominikh/staticcheck-action@v1.3.0
-      with:
-        install-go: false
-        cache-key: ${{ matrix.go_version }}
-        working-directory: ./
+  go-release:
+    needs: [setup]
+    uses: emmahsax/github-actions/.github/workflows/go-release.yml@add_go_test_action
+    with:
+      branch: ${{ needs.setup.outputs.branch }}
