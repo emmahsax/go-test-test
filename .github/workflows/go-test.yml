@@ -8,7 +8,6 @@ on:
 
 jobs:
   setup:
-    if: github.event_name == 'pull_request' || !(github.event_name == 'push' && github.ref == 'refs/heads/main')
     outputs:
       branch: ${{ steps.set_branch_variable.outputs.branch }}
     runs-on: ubuntu-latest
