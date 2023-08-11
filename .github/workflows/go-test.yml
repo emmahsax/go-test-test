@@ -16,7 +16,7 @@ jobs:
         name: Set Branch Variable
         uses: emmahsax/github-actions/set-branch-variable@main
 
-  go-release:
+  go-test:
     needs: [setup]
     uses: emmahsax/github-actions/.github/workflows/go-test.yml@add_go_test_action
     with:
