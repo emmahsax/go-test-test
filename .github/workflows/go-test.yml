@@ -18,6 +18,6 @@ jobs:
 
   go-test:
     needs: [setup]
-    uses: emmahsax/github-actions/.github/workflows/go-test.yml@add_go_test_action
+    uses: emmahsax/github-actions/.github/workflows/go-test.yml@main
     with:
       branch: ${{ needs.setup.outputs.branch }}
