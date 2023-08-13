@@ -1,6 +1,7 @@
 name: Go
 
 on:
+  create:
   push:
     branches: [ main ]
   pull_request:
@@ -21,3 +22,9 @@ jobs:
     uses: emmahsax/github-actions/.github/workflows/go-test.yml@main
     with:
       branch: ${{ needs.setup.outputs.branch }}
+
+  tag-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Tag - ${{ github.ref }}"
+      - run: echo "event name - ${{ github.event_name }}"
