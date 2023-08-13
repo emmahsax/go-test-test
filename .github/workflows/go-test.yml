@@ -1,9 +1,9 @@
 name: Go
 
 on:
-  create:
   push:
     branches: [ main ]
+    tags: [ '*' ]
   pull_request:
     branches: [ main ]
 
@@ -27,5 +27,5 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Tag - ${{ github.ref }}"
+      - run: echo "Tag - ${{ github.ref_name }}"
       - run: echo "event name - ${{ github.event_name }}"
