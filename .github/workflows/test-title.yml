@@ -21,6 +21,6 @@ jobs:
     needs: [ go-release ]
     runs-on: ubuntu-latest
     steps:
-      - run: echo "::set-env name=RUN_NAME::Test ${{ needs.go-release.outputs.tag_name }}"
+      - run: echo "RUN_NAME=Release ${{ needs.go-release.outputs.tag_name }}" >> $GITHUB_ENV
 
-      - run: echo "Run name is $RUN_NAME"
+      - run: echo "Run name is ${{ env.RUN_NAME }}"
