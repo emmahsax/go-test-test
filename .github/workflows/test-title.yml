@@ -11,21 +11,24 @@ on:
         type: string
 
 jobs:
+  setup:
+    outputs:
+      tag_name: ${{ steps.tag_name.outputs.tag_name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Tag Name
+        id: tag_name
+        run: |
+          if [[ "${{ inputs.tag_name }}" == "" ]]; then
+            echo "tag_name=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_OUTPUT
+          else
+            echo "tag_name=${{ inputs.tag_name }}" >> $GITHUB_OUTPUT
+          fi
+
   go-release:
+    needs: [ setup ]
     uses: emmahsax/github-actions/.github/workflows/go-release.yml@try-to-add-tag-name-output
     with:
       build_command: go build
-      tag_name: ${{ inputs.tag_name }}
+      tag_name: ${{ needs.setup.outputs.tag_name }}
       upload: false
-
-  set-run-name:
-    needs: [ go-release ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set Run Name
-        id: set_run_name
-        run: |
-          gh run view ${{ github.run_id }} --log --json name | \
-            jq -r '.name' | \
-            sed -e "s/^Test Title\(.*\)$/Release ${{ needs.go-release.outputs.tag_name }}/g" | \
-            xargs -I {} gh run watch ${{ github.run_id }} --name {}
