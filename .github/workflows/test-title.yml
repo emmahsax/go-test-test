@@ -1,5 +1,4 @@
 name: Test Title
-run-name: Test ${{ jobs.determine-tag-name.outputs.tag_name }}
 
 on:
   workflow_dispatch:
@@ -18,12 +17,10 @@ jobs:
       tag_name: ${{ inputs.tag_name }}
       upload: false
 
-  determine-tag-name:
+  set-run-name:
     needs: [ go-release ]
-    outputs:
-      tag_name: ${{ steps.tag_name.outputs.tag_name }}
     runs-on: ubuntu-latest
     steps:
-      - id: tag_name
-        run: |
-          echo "tag_name=${{ needs.go-release.outputs.tag_name }}" >> $GITHUB_OUTPUT
+      - run: echo "::set-env name=RUN_NAME::Test ${{ needs.go-release.outputs.tag_name }}"
+
+      - run: echo "Run name is $RUN_NAME"
