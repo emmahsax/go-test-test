@@ -16,6 +16,11 @@ jobs:
       tag_name: ${{ steps.tag_name.outputs.tag_name }}
     runs-on: ubuntu-latest
     steps:
+      - name: Check Out Code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
       - name: Set Tag Name
         id: tag_name
         run: |
