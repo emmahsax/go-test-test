@@ -25,7 +25,7 @@ jobs:
       - name: Set Run Name
         id: set_run_name
         run: |
-          gh run view ${{ github.run_id }} --log --json | \
+          gh run view ${{ github.run_id }} --log --json name | \
             jq -r '.name' | \
             sed -e "s/^Test Title\(.*\)$/Release ${{ needs.go-release.outputs.tag_name }}/g" | \
             xargs -I {} gh run watch ${{ github.run_id }} --name {}
