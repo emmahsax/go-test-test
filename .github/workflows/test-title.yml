@@ -21,6 +21,9 @@ jobs:
     needs: [ go-release ]
     runs-on: ubuntu-latest
     steps:
-      - run: echo "RUN_NAME=Release ${{ needs.go-release.outputs.tag_name }}" >> $GITHUB_ENV
-
-      - run: echo "Run name is ${{ env.RUN_NAME }}"
+      - run: |
+          curl -X PATCH \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: Bearer ${{ secrets.github_token }}" \
+            -d '{"name": "Release ${{ needs.go-release.outputs.tag_name }}"}' \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}"
