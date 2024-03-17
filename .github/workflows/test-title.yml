@@ -1,0 +1,29 @@
+name: Test Title
+run-name: Test ${{ jobs.determine-tag-name.outputs.tag_name }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        default: ""
+        description: The tag name to make a GitHub Release for
+        required: false
+        type: string
+
+jobs:
+  go-release:
+    uses: emmahsax/github-actions/.github/workflows/go-release.yml@try-to-add-tag-name-output
+    with:
+      build_command: go build
+      tag_name: ${{ inputs.tag_name }}
+      upload: false
+
+  determine-tag-name:
+    needs: [ go-release ]
+    outputs:
+      tag_name: ${{ steps.tag_name.outputs.tag_name }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: tag_name
+        run: |
+          echo "tag_name=${{ needs.go-release.outputs.tag_name }}" >> $GITHUB_OUTPUT
