@@ -10,7 +10,7 @@ jobs:
       - name: Check Out Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Check line change
         id: line_change
