@@ -13,7 +13,7 @@ jobs:
       - name: Check line change
         id: line_change
         run: |
-          changed_lines=$(git diff HEAD^..HEAD --unified=0 main.go | grep -E '^\+' | grep -E 'fmt.Println("\w+")')
+          changed_lines=$(git diff HEAD..${{ github.sha }} --unified=0 main.go | grep -E '^\+' | grep -E 'fmt.Println("\w+")')
           if [[ -n "$changed_lines" ]]; then
             echo "line_changed=true" >> $GITHUB_OUTPUT
           else
