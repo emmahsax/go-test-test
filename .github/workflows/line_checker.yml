@@ -15,7 +15,7 @@ jobs:
       - name: Check line change
         id: line_change
         run: |
-          changed_file=$(git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} main.go)
+          changed_file="$(git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} main.go)"
           if [ -z "$changed_file" ]; then
             echo "line_changed=false" >> $GITHUB_OUTPUT
           else
