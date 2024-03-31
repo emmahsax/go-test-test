@@ -21,4 +21,5 @@ jobs:
           fi
 
       - name: Display result
-        run: echo "Line changed: ${{ steps.line_change.outputs.line_changed }}"
+        run: |
+          echo "Line changed: ${{ steps.line_change.outputs.line_changed }}"
