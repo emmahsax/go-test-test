@@ -20,7 +20,7 @@ jobs:
             echo "line_changed=false" >> $GITHUB_OUTPUT
           else
             echo "$changed_file"
-            changed_lines=$(echo $changed_file | grep -E '^\+.+fmt.Println\(.+\)')
+            changed_lines=$(echo "$changed_file" | grep -E '^\+.+fmt.Println\(.+\)')
             echo "$changed_lines"
             if [[ -n "$changed_lines" ]]; then
               echo "line_changed=true" >> $GITHUB_OUTPUT
