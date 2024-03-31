@@ -1,0 +1,24 @@
+name: Check Line Change in PR
+
+on:
+  pull_request:
+
+jobs:
+  check_line_change:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check line change
+        id: line_change
+        run: |
+          changed_lines=$(git diff --unified=0 HEAD^ HEAD main.go | grep -E '^\+' | grep -E 'fmt.Println("\w+")')
+          if [[ -n "$changed_lines" ]]; then
+            echo "line_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "line_changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Display result
+        run: echo "Line changed: ${{ steps.line_change.outputs.line_changed }}"
