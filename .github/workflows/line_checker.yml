@@ -12,6 +12,9 @@ jobs:
         with:
           fetch-depth: -1
 
+      - run: |
+          git log --oneline
+
       - name: Check line change
         id: line_change
         run: |
