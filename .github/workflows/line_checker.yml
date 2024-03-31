@@ -4,6 +4,7 @@ on:
   pull_request:
 
 env:
+  description: version update
   file: main.go
   regex: ^\+.+fmt.Println\(.+\)
 
@@ -38,7 +39,7 @@ jobs:
         with:
           comment_tag: line-changed
           message: |
-            :white_check_mark: Version variable updated in `${{ env.file }}`:
+            :white_check_mark: Found ${{ env.description }} in `${{ env.file }}`:
 
             ```diff
             ${{ steps.line_change.outputs.changes }}
@@ -50,7 +51,7 @@ jobs:
         with:
           comment_tag: line-changed
           message: |
-            :warning: Could not find updated version variable in `${{ env.file }}`
+            :warning: Could not find ${{ env.description }} in `${{ env.file }}`
 
       - run: |
           if [[ "${{ steps.line_change.outputs.line_changed }}" == 'false' ]]; then
