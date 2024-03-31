@@ -50,11 +50,7 @@ jobs:
         with:
           comment_tag: line-changed
           message: |
-            :warning: Version variable not updated
-
-      - name: Display result
-        run: |
-          echo "Line changed: ${{ steps.line_change.outputs.line_changed }}"
+            :warning: Could not find updated version variable in `${{ env.file }}`
 
       - run: |
           if [[ "${{ steps.line_change.outputs.line_changed }}" == 'false' ]]; then
