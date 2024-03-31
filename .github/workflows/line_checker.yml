@@ -37,7 +37,7 @@ jobs:
         name: Line Changed Comment
         uses: thollander/actions-comment-pull-request@v2
         with:
-          comment_tag: line-changed
+          comment_tag: line-changed2
           message: |
             :white_check_mark: Found ${{ env.description }} in `${{ env.file }}`:
 
@@ -49,7 +49,7 @@ jobs:
         name: Line Not Changed Comment
         uses: thollander/actions-comment-pull-request@v2
         with:
-          comment_tag: line-changed
+          comment_tag: line-changed2
           message: |
             :warning: Could not find ${{ env.description }} in `${{ env.file }}`
 
