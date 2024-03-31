@@ -19,7 +19,7 @@ jobs:
           if [ -z "$changed_file" ]; then
             echo "line_changed=false" >> $GITHUB_OUTPUT
           else
-            changed_lines=$(echo $changed_file | grep -E 'fmt.Println("\w+")')
+            changed_lines=echo $changed_file | grep -E '^\+.+fmt.Println\(.+\)'
             if [[ -n "$changed_lines" ]]; then
               echo "line_changed=true" >> $GITHUB_OUTPUT
             else
