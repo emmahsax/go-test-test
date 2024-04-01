@@ -3,5 +3,5 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println("This is my dddmain function")
+	fmt.Println("This is my main function")
 }
