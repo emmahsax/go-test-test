@@ -9,7 +9,7 @@ env:
   regex: ^\+.+fmt.Println\(.+\)
 
 jobs:
-  check_line_change:
+  main:
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Code
@@ -17,43 +17,37 @@ jobs:
         with:
           fetch-depth: -1
 
-      - name: Check line change
-        id: line_change
+      - id: changes
+        name: Check for Changes
         run: |
           changed_file="$(git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} ${{ env.file }})"
           if [ -z "$changed_file" ]; then
-            echo "line_changed=false" >> $GITHUB_OUTPUT
+            exit 1
           else
             changed_line=$(echo "$changed_file" | grep -E '${{ env.regex }}')
             if [[ -n "$changed_line" ]]; then
-              echo "line_changed=true" >> $GITHUB_OUTPUT
               echo "changes=$changed_line" >> $GITHUB_OUTPUT
             else
-              echo "line_changed=false" >> $GITHUB_OUTPUT
+              exit 1
             fi
           fi
 
-      - if: steps.line_change.outputs.line_changed == 'true'
-        name: Line Changed Comment
+      - if: success()
+        name: Found Change Comment
         uses: thollander/actions-comment-pull-request@v2
         with:
-          comment_tag: line-changed2
+          comment_tag: changes
           message: |
             :white_check_mark: Found ${{ env.description }} in `${{ env.file }}`:
 
             ```diff
-            ${{ steps.line_change.outputs.changes }}
+            ${{ steps.changes.outputs.changes }}
             ```
 
-      - if: steps.line_change.outputs.line_changed == 'false'
-        name: Line Not Changed Comment
+      - if: failure()
+        name: Missing Change Comment
         uses: thollander/actions-comment-pull-request@v2
         with:
-          comment_tag: line-changed2
+          comment_tag: changes
           message: |
             :warning: Could not find ${{ env.description }} in `${{ env.file }}`
-
-      - run: |
-          if [[ "${{ steps.line_change.outputs.line_changed }}" == 'false' ]]; then
-            exit 1
-          fi
