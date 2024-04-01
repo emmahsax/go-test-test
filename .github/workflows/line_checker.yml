@@ -6,8 +6,7 @@ on:
 env:
   description: version update
   file: main.go
-  addition_regex: ^\+\s+fmt.Println\(.+\)
-  removal_regex: ^\-\s+fmt.Println\(.+\)
+  regex: fmt.Println\(.+\)
 
 jobs:
   main:
@@ -25,11 +24,11 @@ jobs:
           if [ -z "$changed_file" ]; then
             exit 1
           else
-            changed_line=$(echo "$changed_file" | grep -E '${{ env.addition_regex }}')
-            if [[ -n "$changed_line" ]]; then
-              removal_line=$(echo "$changed_file" | grep -E '${{ env.removal_regex }}')
-              echo "addition_changes=$changed_line" >> $GITHUB_OUTPUT
-              echo "removal_changes=$removal_line" >> $GITHUB_OUTPUT
+            added_match=$(echo "$changed_file" | grep -E '^\+\s+${{ env.regex }}')
+            removed_match=$(echo "$changed_file" | grep -E '^\-\s+${{ env.regex }}')
+            if [[ -n "$added_match" ]] && [[ -n "$removed_match" ]]; then
+              echo "added_match=$added_match" >> $GITHUB_OUTPUT
+              echo "removed_match=$removed_match" >> $GITHUB_OUTPUT
             else
               exit 1
             fi
@@ -44,8 +43,8 @@ jobs:
             :white_check_mark: Found ${{ env.description }} in `${{ env.file }}`:
 
             ```diff
-            ${{ steps.changes.outputs.removal_changes }}
-            ${{ steps.changes.outputs.addition_changes }}
+            ${{ steps.changes.outputs.removed_match }}
+            ${{ steps.changes.outputs.added_match }}
             ```
 
       - if: failure()
