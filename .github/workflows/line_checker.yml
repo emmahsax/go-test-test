@@ -6,8 +6,8 @@ on:
 env:
   description: version update
   file: main.go
-  addition_regex: ^\+.+fmt.Println\(.+\)
-  removal_regex: ^\-.+fmt.Println\(.+\)
+  addition_regex: ^\+\s+fmt.Println\(.+\)
+  removal_regex: ^\-\s+fmt.Println\(.+\)
 
 jobs:
   main:
