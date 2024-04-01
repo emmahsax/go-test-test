@@ -6,7 +6,8 @@ on:
 env:
   description: version update
   file: main.go
-  regex: ^\+.+fmt.Println\(.+\)
+  addition_regex: ^\+.+fmt.Println\(.+\)
+  removal_regex: ^\-.+fmt.Println\(.+\)
 
 jobs:
   main:
@@ -24,9 +25,11 @@ jobs:
           if [ -z "$changed_file" ]; then
             exit 1
           else
-            changed_line=$(echo "$changed_file" | grep -E '${{ env.regex }}')
+            changed_line=$(echo "$changed_file" | grep -E '${{ env.addition_regex }}')
             if [[ -n "$changed_line" ]]; then
-              echo "changes=$changed_line" >> $GITHUB_OUTPUT
+              removal_line=$(echo "$changed_file" | grep -E '${{ env.removal_regex }}')
+              echo "addition_changes=$changed_line" >> $GITHUB_OUTPUT
+              echo "removal_changes=$removal_line" >> $GITHUB_OUTPUT
             else
               exit 1
             fi
@@ -41,7 +44,8 @@ jobs:
             :white_check_mark: Found ${{ env.description }} in `${{ env.file }}`:
 
             ```diff
-            ${{ steps.changes.outputs.changes }}
+            ${{ steps.changes.outputs.removal_changes }}
+            ${{ steps.changes.outputs.addition_changes }}
             ```
 
       - if: failure()
