@@ -19,13 +19,13 @@ jobs:
 
   go-test:
     needs: [setup]
-    uses: emmahsax/github-actions/.github/workflows/go-test.yml@main
+    uses: emmahsax/github-actions/.github/workflows/go-test.yml@use_go_task
     with:
       branch: ${{ needs.setup.outputs.branch }}
 
   go-release:
     if: startsWith(github.ref, 'refs/tags/v')
-    uses: emmahsax/github-actions/.github/workflows/go-release.yml@main
+    uses: emmahsax/github-actions/.github/workflows/go-release.yml@use_go_task
     with:
       tag_name: ${{ github.ref_name }}
       upload: false
