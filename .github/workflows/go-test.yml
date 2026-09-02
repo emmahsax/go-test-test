@@ -6,9 +6,11 @@ on:
   #   tags: [ '*' ]
   pull_request:
     branches: [ main ]
+    types: [opened, ready_for_review, reopened, synchronize]
 
 jobs:
   setup:
+    if: ${{ !github.event.pull_request.draft }}
     outputs:
       branch: ${{ steps.set_branch_variable.outputs.branch }}
     permissions: {}
@@ -27,7 +29,7 @@ jobs:
       branch: ${{ needs.setup.outputs.branch }}
 
   go-release:
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: ${{ !github.event.pull_request.draft && startsWith(github.ref, 'refs/tags/v') }}
     permissions:
       contents: write
     uses: emmahsax/github-actions/.github/workflows/go-release.yml@main
